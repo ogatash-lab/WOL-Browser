@@ -1,0 +1,56 @@
+{
+    "name": "Log Reader3",
+    "description": "Adds a print button to the browser.",
+    "version": "2.0",
+    "background": {
+        "scripts": ["background.js"],
+        "persistent": false
+    },
+    /*
+	"content_scripts":[
+        {
+            "matches":["https://selab-su.weebly.com/*"],
+
+            "js":["jquery.js", "background.js"]
+        }
+    ],
+	*/
+    "permissions": [
+        "activeTab",
+        "alarms",
+        "background",
+        "bookmarks",
+        "browsingData",
+        "clipboardRead",
+        "clipboardWrite",
+        "contentSettings",
+        "contextMenus",
+        "cookies",
+        "debugger",
+        "declarativeContent",
+        "desktopCapture",
+        "downloads",
+        "fontSettings",
+        "gcm",
+        "geolocation",
+		"https://campus-3.shinshu-u.ac.jp/*",
+		"https://spica.gakumu.tuat.ac.jp/*",
+		"https://www.rakuten.co.jp/*",
+		"https://www.facebook.com/*",
+		"https://www.amazon.co.jp/*",
+		"https://anet.akita-u.ac.jp/",
+		"https://eduweb.sta.kanazawa-u.ac.jp/",
+		"https://basket.step.rakuten.co.jp/*",
+		"https://www.dnp.co.jp/*",
+        //"*://*/*",
+		"http://localhost/*",
+		"https://160.252.130.85:443/*",
+        "tabs",
+        "webNavigation"
+    ],
+    "browser_action": {
+        "default_title": "Print this page",
+        "default_icon": "print_16x16.png"
+    },
+    "manifest_version": 2
+}
