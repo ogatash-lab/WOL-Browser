@@ -2,19 +2,20 @@
     "name": "Log Reader3",
     "description": "Adds a print button to the browser.",
     "version": "2.0",
-    "background": {
+   /* "background": {5~8行コメントアウト
         "scripts": ["background.js"],
         "persistent": false
-    },
-    /*
+    },*/
+
 	"content_scripts":[
         {
-            "matches":["https://selab-su.weebly.com/*"],
+            "matches":["*://*/*"],
 
-            "js":["jquery.js", "background.js"]
+            //"js":["jquery.js", "background.js"]"content_scripts"のコメントアウト外す,js編集
+           "js":["inject.js"]
         }
     ],
-	*/
+
     "permissions": [
         "activeTab",
         "alarms",
@@ -42,8 +43,8 @@
 		"https://eduweb.sta.kanazawa-u.ac.jp/",
 		"https://basket.step.rakuten.co.jp/*",
 		"https://www.dnp.co.jp/*",
-        //"*://*/*",
-		"http://localhost/*",
+        "http://127.0.0.1:3000/*",
+        "http://127.0.0.1:5000/*",
 		"https://160.252.130.85:443/*",
         "tabs",
         "webNavigation"

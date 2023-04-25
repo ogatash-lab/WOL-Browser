@@ -1,4 +1,5 @@
 let oplorLogs = [];
+//var oplorLogs = [];
 
 //ログの構造を記録しておく
 //var LogType;
@@ -56,7 +57,8 @@ function getSelectorFromElement(element) {
         } else {
             let sib = element;
             let nth = 0;
-            while (sib && sib.nodeType === Node.ELEMENT_NODE) {console.log('json:'+oplorLogs.toString());
+            while (sib && sib.nodeType === Node.ELEMENT_NODE) {
+                console.log('json:'+oplorLogs.toString());
                 nth++;
                 sib = sib.previousSibling;
             }
@@ -154,6 +156,11 @@ function createUIEventJson(uiEvent) {
     return {
         detail: uiEvent.detail,
         //view: uiEvent.view
+    }
+}
+function createPointerEventJson(pointerEvent) {
+    return {
+
     }
 }
 function createFocusEventJson(focusEvent) {
@@ -1303,6 +1310,7 @@ eventSpecRequest.onreadystatechange = () => {
     for (const eventSpec of eventSpecs) {//
 		//eventの種類確認用
 		//console.log(eventSpec.name);
+        //console.log(eventSpec.type.name);
         if (isTarget(eventSpec)) {//ログをとるイベントかどうか確認
             //console.log(eventSpec.name+"2");
 			addEventListenerToAllEventTargets(document, eventSpec);//リスナーを登録
