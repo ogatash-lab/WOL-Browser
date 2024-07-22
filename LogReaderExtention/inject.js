@@ -146,7 +146,6 @@ function createEventJson(event) {
 //        currentTarget: event.currentTarget,
         defaultPrevented: event.defaultPrevented,
         eventPhase: event.eventPhase,
-//        target: event.target,
         timeStamp: event.timeStamp,
         type: event.type,
         isTrusted: event.isTrusted
