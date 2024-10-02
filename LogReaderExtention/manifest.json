@@ -12,7 +12,8 @@
             "matches":["*://*/*"],
 
             //"js":["jquery.js", "background.js"]"content_scripts"のコメントアウト外す,js編集
-           "js":["inject.js"]
+           "js":["inject.js"],
+	   "all_frames": true // すべてのフレームに対してスクリプトを実行
         }
     ],
 
