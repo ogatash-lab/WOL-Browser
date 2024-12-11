@@ -7,7 +7,9 @@
 	"content_scripts":[
         {
             "matches":["*://*/*"],
-           "js":["inject.js"]
+
+            "js":["inject.js"],
+            "all_frames": true // すべてのフレームに対してスクリプトを実行
         }
     ],
 
