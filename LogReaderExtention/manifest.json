@@ -1,17 +1,12 @@
 {
     "name": "Log Reader3",
-    "description": "Adds a print button to the browser.",
+    "description": "Sends logs of user actions to the server for analysis",
     "version": "2.0",
-   /* "background": {5~8行コメントアウト
-        "scripts": ["background.js"],
-        "persistent": false
-    },*/
+    "manifest_version": 3,
 
 	"content_scripts":[
         {
             "matches":["*://*/*"],
-
-            //"js":["jquery.js", "background.js"]"content_scripts"のコメントアウト外す,js編集
            "js":["inject.js"]
         }
     ],
@@ -34,6 +29,11 @@
         "fontSettings",
         "gcm",
         "geolocation",
+        "tabs",
+        "webNavigation"
+    ],
+
+    "host_permissions": [
 		"https://campus-3.shinshu-u.ac.jp/*",
 		"https://spica.gakumu.tuat.ac.jp/*",
 		"https://www.rakuten.co.jp/*",
@@ -45,13 +45,11 @@
 		"https://www.dnp.co.jp/*",
         "http://127.0.0.1:3000/*",
         "http://127.0.0.1:5000/*",
-		"https://160.252.130.85:443/*",
-        "tabs",
-        "webNavigation"
+		"https://160.252.130.85:443/*"
     ],
-    "browser_action": {
-        "default_title": "Print this page",
-        "default_icon": "print_16x16.png"
-    },
-    "manifest_version": 2
+
+    "action": {
+        "default_title": "Send user activity logs",
+        "default_icon": "send_16x16.png"
+    }
 }

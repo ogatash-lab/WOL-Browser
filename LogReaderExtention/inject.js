@@ -5,9 +5,12 @@ let oplorLogs = [];
 //var LogType;
 var EventType, NodeType;
 
-const operationLogRequest = new XMLHttpRequest();
+//operationLogRequest = new XMLHttpRequest();
+let operationLogRequest;
 function init(){
+    operationLogRequest = new XMLHttpRequest();
     //operationLogRequest.open("post", "https://160.252.130.85:443/HW", true);//本番用
+    // WOL-Serverで立てたサーバと通信する
 	operationLogRequest.open("post", "http://localhost:8080/OpLoRServerPrototype-1.0-SNAPSHOT/HW", true);//開発環境を経由しない場合
     //operationLogRequest.open("post", "http://localhost:8080/OpLoRServerPrototype_war_exploded/HW", true);//開発環境を経由する場合
     operationLogRequest.setRequestHeader("Content-Type", "application/json; charset=ASCII");
@@ -113,6 +116,7 @@ function parseEvent(event) {
         EventType='WheelEvent';
         json = Object.assign(json, createWheelEventJson(event));
     }
+    // PointerEventをコメントアウトすることで，clickがmouseeventに分類される
     if(typeof PointerEvent=='function'&&event instanceof PointerEvent){
         EventType='PointerEvent';
         json=Object.assign(json, createPointerEventJson(event));
@@ -1293,14 +1297,51 @@ function customStringify(json) {
     return jsonString;
 }
 
-//astah
 
+
+
+
+
+
+
+let eventSpecs;
+// グローバルに MutationObserver を定義
+const observer = new MutationObserver((mutations) => {
+    for (const mutation of mutations) {
+        if (mutation.type === 'childList') {
+            for (const addedNode of mutation.addedNodes) {
+                if (addedNode instanceof Node) {
+                    // すべてのイベント仕様でリスナーを追加
+                    for (const eventSpec of eventSpecs) {
+                        if (isTarget(eventSpec)) {
+                            addEventListenerToAllEventTargets(addedNode, eventSpec);
+
+                        }
+                    }
+                }
+            }
+            // 削除されたノードに対してイベントリスナーを削除
+            for (const removedNode of mutation.removedNodes) {
+                if (removedNode instanceof Node) {
+                    removeEventListenersFromElement(removedNode);
+                }
+            }
+        }
+    }
+});
+
+// DOM の変更を監視する
+function observeDOMChanges() {
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
+}
+
+
+//(ここから処理スタート)
 const eventSpecRequest = new XMLHttpRequest();
-//eventSpecRequest.open("get", "https://160.252.130.85:443/standard_event.json", true);//本番用
-//eventSpecRequest.open("get", "http://localhost:8080/OpLoRServerPrototype_war_exploded/standard_event.json", true);//経由する
-eventSpecRequest.open("get", "http://localhost:8080/OpLoRServerPrototype-1.0-SNAPSHOT/standard_event.json", true)//経由しない
-
-//eventSpecRequest.open("post", "http://localhost:8080/OpLoRServerPrototype/HW", true);
+eventSpecRequest.open("get", "http://localhost:8080/OpLoRServerPrototype-1.0-SNAPSHOT/standard_event.json", true)
 eventSpecRequest.onreadystatechange = () => {
     if (eventSpecRequest.readyState !== 4 || eventSpecRequest.status !== 200) {//正常に通信が終わらない
         return;
@@ -1316,6 +1357,8 @@ eventSpecRequest.onreadystatechange = () => {
         }
     }
 };
+
+
 function isTarget(eventSpec) {
 	return !eventSpec.deprecated//非推奨ではないもの
         && !eventSpec.experimental//実験的なものでないもの
@@ -1342,6 +1385,7 @@ function isTarget(eventSpec) {
         ;
 }
 
+// 子孫までリスナーを追加
 function addEventListenerToAllEventTargets(candidate, eventSpec) {
     	//console.log(eventSpec.name+":"+candidate.tagName);
 	if (!(candidate instanceof EventTarget) || !eventSpec) {
@@ -1357,17 +1401,25 @@ function addEventListenerToAllEventTargets(candidate, eventSpec) {
     }
 }
 
-const config = {
-    attributes: true,
-    childList: true,
-    characterData: true,
-    subtree: true,
-    attributeOldValue: true,
-    characterDataOldValue: true
-};
-const observer = new MutationObserver(sendMutationLog);
-//observer.observe(document, config);//動的にサイトが変更したログも表示される。量が多い。
-//observer.disconnect();
+
+// イベントリスナーを削除する関数
+function removeEventListenersFromElement(element) {
+    if (!(element instanceof EventTarget)) {
+        return;
+    }
+    for (const eventSpec of eventSpecs) {
+        if (isTarget(eventSpec)) {
+            element.removeEventListener(eventSpec.name, sendEventLog, false);
+        }
+    }
+    if (element instanceof Node) {
+        for (const child of element.childNodes) {
+            removeEventListenersFromElement(child);
+        }
+    }
+}
+
+
 
 function sendMutationLog(mutations) {
     oplorLogs.push(customStringify(parseMutations(mutations)));
