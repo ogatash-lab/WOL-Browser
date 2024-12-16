@@ -233,6 +233,11 @@ function parseEvent(event) {
         EventType='InputEvent';
         json = Object.assign(json, createInputEventJson(event));
     }
+    //HTML5のinputイベントを分類するため，一時的にif文を用いてEvent, changeイベント, Inputイベントの分類を行う(RDM測定時用)
+    if(event.type === 'input'){  // changeイベント(HTML)を分類させる
+        EventType='InputEvent';
+        json = Object.assign(json, createInputEventJson(event));
+    }
     if (event.type === "selectionchange") {
         EventType='selectionchange';
         json = Object.assign(json, {
@@ -340,7 +345,8 @@ function createWheelEventJson(event) {
 }
 function createInputEventJson(event) {
     return {
-        data: event.data,
+        // data: event.data,
+        data: event.target.value,   //html5用に変更(入力のたびに，その入力フィールドのすべての文字が出力)
         //dataTransfer: event.dataTransfer, // WOL-Serverに未実装
         inputType: event.inputType,
         isComposing: event.isComposing
