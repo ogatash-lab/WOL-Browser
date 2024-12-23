@@ -664,7 +664,7 @@ function createElementJson(element) {
         clientHeight: element.clientHeight,
         clientLeft: element.clientLeft,
         clientTop: element.clientTop,
-        //clientWidth: element.clientWidth,    // WOL-Serverで未実装
+        clientWidth: element.clientWidth,
         computedName: element.computedName,
         computedRole: element.computedRole,
         id: element.id,
@@ -683,7 +683,7 @@ function createElementJson(element) {
         slot: element.slot,
         tagName: element.tagName,
         //undoManager: element.undoManager, // WOL-Serverで未実装
-        undoScope: element.undoScope    // WOL-Serverで未実装
+        //undoScope: element.undoScope    // WOL-Serverで未実装
     };
 }
 function createCharacterDataJson(characterData) {
