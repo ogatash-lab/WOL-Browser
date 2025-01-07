@@ -773,7 +773,6 @@ function createHTMLAnchorElementJson(htmlAnchorElement) {
         rel: htmlAnchorElement.rel,
         //relList: htmlAnchorElement.relList,   // WOL-Serverで未実装
         search: htmlAnchorElement.search,
-        tabindex: htmlAnchorElement.tabindex,
         target: htmlAnchorElement.target,
         text: htmlAnchorElement.text,
         type: htmlAnchorElement.type,
@@ -802,7 +801,6 @@ function createHTMLAreaElementJson(htmlAreaElement) {
         //relList: htmlAreaElement.relList, // WOL-Serverで未実装
         search: htmlAreaElement.search,
         shape: htmlAreaElement.shape,
-        tabindex: htmlAreaElement.tabindex,
         target: htmlAreaElement.target,
         type: htmlAreaElement.type,
         username: htmlAreaElement.username
@@ -828,7 +826,6 @@ function createHTMLButtonElementJson(htmlButtonElement) {
         //labels: htmlButtonElement.labels, // WOL-Serverで未実装
         //menu: htmlButtonElement.menu, // WOL-Serverで未実装
         name: htmlButtonElement.name,
-        tabIndex: htmlButtonElement.tabIndex,
         type: htmlButtonElement.type,
         validationMessage: htmlButtonElement.validationMessage,
         //validity: htmlButtonElement.validity, // WOL-Serverで未実装
@@ -1079,7 +1076,6 @@ function createHTMLObjectElementJson(htmlObjectElement) {
         //formSelector: getSelectorFromElement(htmlObjectElement.form).join(" > "), // WOL-Serverに未実装
         height: htmlObjectElement.height,
         name: htmlObjectElement.name,
-        tabindex: htmlObjectElement.tabindex,
         typeMustMatch: htmlObjectElement.typeMustMatch,
         useMap: htmlObjectElement.useMap,
         validationMessage: htmlObjectElement.validationMessage,
@@ -1259,7 +1255,6 @@ function createHTMLTextAreaElementJson(htmlTextAreaElement) {
         accessKey: htmlTextAreaElement.accessKey,
         readOnly: htmlTextAreaElement.readOnly,
         required: htmlTextAreaElement.required,
-        tabIndex: htmlTextAreaElement.tabIndex,
         selectionStart: htmlTextAreaElement.selectionStart,
         selectionEnd: htmlTextAreaElement.selectionEnd,
         selectionDirection: htmlTextAreaElement.selectionDirection,
