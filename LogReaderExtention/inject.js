@@ -981,9 +981,9 @@ function createHTMLLinkElementJson(htmlLinkElement) {
         media: htmlLinkElement.media,
         referrerPolicy: htmlLinkElement.referrerPolicy,
         rel: htmlLinkElement.rel,
-        relList: htmlLinkElement.relList,
-        sizes: htmlLinkElement.sizes,
-        sheet: htmlLinkElement.sheet,
+        //relList: htmlLinkElement.relList, // 直接シリアライズできない
+        //sizes: htmlLinkElement.sizes, // 直接シリアライズできない
+        //sheet: htmlLinkElement.sheet, // 直接シリアライズできない
         type: htmlLinkElement.type
     };
 }
