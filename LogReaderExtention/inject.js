@@ -431,7 +431,7 @@ function parseElement(element) {
         json = Object.assign(json, createHTMLEmbedElementJson(element));
     }
     if (typeof HTMLFieldSetElement === 'function'&&element instanceof HTMLFieldSetElement) {
-        NodeType='HTMLFieldElement';
+        NodeType='HTMLFieldSetElement';
         json = Object.assign(json, createHTMLFieldSetElementJson(element));
     }
     if (typeof HTMLFormElement === 'function'&&element instanceof HTMLFormElement) {
@@ -864,7 +864,7 @@ function createHTMLEmbedElementJson(htmlEmbedElement) {
 function createHTMLFieldSetElementJson(htmlFieldSetElement) {
     return {
         disabled: htmlFieldSetElement.disabled,
-        elements: htmlFieldSetElement.elements,
+        //elements: htmlFieldSetElement.elements, // 直接シリアライズできない
         //form: htmlFieldSetElement.form,   // WOL-Serverに未実装
         //formSelector: getSelectorFromElement(htmlFieldSetElement.form).join(" > "),   // WOL-Serverに未実装
         name: htmlFieldSetElement.name,
