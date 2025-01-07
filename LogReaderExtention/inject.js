@@ -1076,7 +1076,6 @@ function createHTMLObjectElementJson(htmlObjectElement) {
         //formSelector: getSelectorFromElement(htmlObjectElement.form).join(" > "), // WOL-Serverに未実装
         height: htmlObjectElement.height,
         name: htmlObjectElement.name,
-        typeMustMatch: htmlObjectElement.typeMustMatch,
         useMap: htmlObjectElement.useMap,
         validationMessage: htmlObjectElement.validationMessage,
         //validity: htmlObjectElement.validity, // WOL-Serverに未実装
