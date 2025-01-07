@@ -1149,7 +1149,7 @@ function createHTMLSelectElementJson(htmlSelectElement) {
         disabled: htmlSelectElement.disabled,
         //form: htmlSelectElement.form, // WOL-Serverに未実装
         //formSelector: getSelectorFromElement(htmlSelectElement.form).join(" > "), // WOL-Serverに未実装
-        labels: htmlSelectElement.labels,
+        //labels: htmlSelectElement.labels, // WOL-Serverに未実装
         length: htmlSelectElement.length,
         multiple: htmlSelectElement.multiple,
         name: htmlSelectElement.name,
