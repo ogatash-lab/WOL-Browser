@@ -756,7 +756,6 @@ function createSVGElementJson(svgElement) {
 }
 function createHTMLAnchorElementJson(htmlAnchorElement) {
     return {
-        accessKey: htmlAnchorElement.accessKey,
         download: htmlAnchorElement.download,
         hash: htmlAnchorElement.hash,
         host: htmlAnchorElement.host,
@@ -781,7 +780,6 @@ function createHTMLAnchorElementJson(htmlAnchorElement) {
 }
 function createHTMLAreaElementJson(htmlAreaElement) {
     return {
-        accessKey: htmlAreaElement.accessKey,
         alt: htmlAreaElement.alt,
         coords: htmlAreaElement.coords,
         download: htmlAreaElement.download,
@@ -947,7 +945,6 @@ function createHTMLInputElementJson(htmlInputElement) {
         selectionDirection: htmlInputElement.selectionDirection,
         defaultValue: htmlInputElement.defaultValue,
         dirName: htmlInputElement.dirName,
-        //accessKey: htmlInputElement.accessKey,    // WOL-Serverに未実装
         //list: htmlInputElement.list,  // WOL-Serverに未実装
         multiple: htmlInputElement.multiple,
         //labels: htmlInputElement.labels,  // WOL-Serverに未実装
@@ -974,7 +971,6 @@ function createHTMLLegendElementJson(htmlLegendElement) {
     return {
         //form: htmlLegendElement.form, // WOL-Serverに未実装
         //formSelector: getSelectorFromElement(htmlLegendElement.form).join(" > "), // WOL-Serverに未実装
-        accessKey: htmlLegendElement.accessKey
     };
 }
 function createHTMLLinkElementJson(htmlLinkElement) {
@@ -1252,7 +1248,6 @@ function createHTMLTextAreaElementJson(htmlTextAreaElement) {
         disabled: htmlTextAreaElement.disabled,
         //labels: htmlTextAreaElement.labels,   // WOL-Serverに未実装
         maxLength: htmlTextAreaElement.maxLength,
-        accessKey: htmlTextAreaElement.accessKey,
         readOnly: htmlTextAreaElement.readOnly,
         required: htmlTextAreaElement.required,
         selectionStart: htmlTextAreaElement.selectionStart,
