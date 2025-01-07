@@ -444,12 +444,10 @@ function parseElement(element) {
         NodeType='HTMLFormElement';
         json = Object.assign(json, createHTMLFormElementJson(element));
     }
-    /*  // WOL-Serverに未実装(誤ってHTMLFrameElementが実装されている)
     if (typeof HTMLIFrameElement === 'function'&&element instanceof HTMLIFrameElement) {
         NodeType='HTMLIFrameFormElement';
         json = Object.assign(json, createHTMLIFrameElementJson(element));
     }
-    */
     if (typeof HTMLInputElement === 'function'&&element instanceof HTMLInputElement) {
         NodeType='HTMLInputElement';
         json = Object.assign(json, createHTMLInputElementJson(element));
