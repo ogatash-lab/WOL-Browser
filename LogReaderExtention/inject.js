@@ -822,7 +822,6 @@ function createHTMLBaseElementJson(htmlBaseElement) {
 }
 function createHTMLButtonElementJson(htmlButtonElement) {
     return {
-        accessKey: htmlButtonElement.accessKey,
         autofocus: htmlButtonElement.autofocus,
         disabled: htmlButtonElement.disabled,
         //form: htmlButtonElement.form, // WOL-Serverで未実装
