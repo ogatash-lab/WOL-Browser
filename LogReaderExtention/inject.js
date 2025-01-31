@@ -117,9 +117,10 @@ function sendEventLog(event) {
         return;
     }
 
+    const eventDate = new Date();
     const json = [];
 
-    let {EventType, json: EventLog} = parseEvent(event);    // 戻り値jsonをEventLogとする
+    let {EventType, json: EventLog} = parseEvent(event, eventDate);    // 戻り値jsonをEventLogとする
     let {NodeType, json: NodeLog} = parseElement(event.target); // 戻り値jsonをEventLogとする
 
     // イベント情報をJSONに追加
@@ -188,12 +189,12 @@ function init(){
 
 // イベントオブジェクトを解析して，対応するJSONを生成する関数
 // イベントタイプごとに情報をマージしている
-function parseEvent(event) {
+function parseEvent(event, eventDate) {
     let json = {};
     let EventType;
     if (typeof Event === 'function'&&event instanceof Event) {
         EventType='Event';
-        json = Object.assign(json, createEventJson(event));
+        json = Object.assign(json, createEventJson(event, eventDate));
     }
     if (typeof UIEvent === 'function'&&event instanceof UIEvent) {
         EventType='UIEvent';
@@ -225,10 +226,12 @@ function parseEvent(event) {
         json = Object.assign(json, createWheelEventJson(event));
     }
     // ※PointerEventはisTarget()でログを取らないようにしている(WOL-Serverに未実装)
+    /*
     if(typeof PointerEvent=='function'&&event instanceof PointerEvent){
         EventType='PointerEvent';
         json=Object.assign(json, createPointerEventJson(event));
     }
+    */
     if (typeof InputEvent === 'function'&&event instanceof InputEvent) {
         EventType='InputEvent';
         json = Object.assign(json, createInputEventJson(event));
@@ -254,7 +257,7 @@ function parseEvent(event) {
 }
 
 // イベントオブジェクトから主要な情報を抽出し，JSON形式で返す関数
-function createEventJson(event) {
+function createEventJson(event, eventDate) {
     return {
         bubbles: event.bubbles,
         cancelable: event.cancelable,
@@ -263,6 +266,7 @@ function createEventJson(event) {
         defaultPrevented: event.defaultPrevented,
         eventPhase: event.eventPhase,
         timeStamp: event.timeStamp,
+        epochMillis: eventDate.getTime(),
         type: event.type,
         isTrusted: event.isTrusted
     }
