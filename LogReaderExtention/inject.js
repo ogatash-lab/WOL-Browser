@@ -33,7 +33,6 @@ function isTarget(eventSpec) {
         && !eventSpec.experimental  // 実験的ではない
         && !eventSpec.type.deprecated   // イベントタイプが非推奨ではない
         && !eventSpec.type.experimental // イベントタイプが実験的ではない
-		&& eventSpec.type.name != "PointerEvent";   // PointerEventではない
 }
 
 // DOM要素に対して全てのイベント仕様に基づいてsendEventLogを実行するイベントリスナーを追加する関数
@@ -109,6 +108,13 @@ function removeEventListenersFromElement(element) {
 }
 
 //-----イベントハンドラーの動作------
+
+// 送信するイベントを判断する関数
+function shouldSendLog(event){
+    const disallowedEvents = ["mouseenter", "mouseover", "submit"];
+    return !disallowedEvents.includes(event.type);
+
+}
 
 // ログを生成し，送信する関数(イベントハンドラー関数)
 function sendEventLog(event) {
@@ -226,11 +232,13 @@ function parseEvent(event, eventDate) {
         EventType='WheelEvent';
         json = Object.assign(json, createWheelEventJson(event));
     }
-    // ※PointerEventはisTarget()でログを取らないようにしている(WOL-Serverに未実装)
+    // ※(WOL-Serverに未実装)
+    /*
     if(typeof PointerEvent=='function'&&event instanceof PointerEvent){
         EventType='PointerEvent';
         json=Object.assign(json, createPointerEventJson(event));
     }
+    */
     if (typeof InputEvent === 'function'&&event instanceof InputEvent) {
         EventType='InputEvent';
         json = Object.assign(json, createInputEventJson(event));
