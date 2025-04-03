@@ -109,17 +109,30 @@ function removeEventListenersFromElement(element) {
 
 //-----イベントハンドラーの動作------
 
-// 送信するイベントを判断する関数
-function shouldSendLog(event){
-    const disallowedEvents = ["mouseenter", "mouseover", "submit"];
-    return !disallowedEvents.includes(event.type);
-
-}
+// 送信しないイベントを判断する関数
+const ignoredEvents = [
+    // マウスイベント
+    "mouseenter", "mouseover", "mouseout", "mouseleave", "dblclick",
+    "mousedown", "mouseup",
+    // ポインターイベント (タッチやペン入力にも対応)
+    "pointerenter", "pointerover", "pointerout", "pointerleave",
+    // キーボードイベント
+    "keyup", "keydown", "keypress",
+    // フォーム関連イベント
+    "change", "focus", "blur",
+    // ページ関連イベント
+    "load"
+];
 
 // ログを生成し，送信する関数(イベントハンドラー関数)
 function sendEventLog(event) {
     // イベントターゲットが現在のターゲットと異なる場合，処理を中止(操作対象要素のみ操作ログを送信)
     if(event.target !== event.currentTarget) {
+        return;
+    }
+
+    // 送信しないイベントの場合，処理を中止(対象イベントのみ操作ログを送信)
+    if(ignoredEvents.includes(event.type)){
         return;
     }
 
@@ -155,7 +168,7 @@ function sendLog(oplorLog, EventType, NodeType) {
         // 初期化処理が成功した場合
 		if(operationLogRequest) {
             // ログをコンソールに表示（デバッグ用）
-			console.log("Logs:"+oplorLog.toString());
+			// console.log("Logs:"+oplorLog.toString());
             // イベント情報と共にログデータを送信
             operationLogRequest.send(EventType+"@@"+NodeType+"@@"+ oplorLog.toString());
         }
