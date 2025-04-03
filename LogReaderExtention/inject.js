@@ -110,11 +110,12 @@ function removeEventListenersFromElement(element) {
 //-----イベントハンドラーの動作------
 
 // 送信するイベントを判断する関数
+/*
 function shouldSendLog(event){
     const disallowedEvents = ["mouseenter", "mouseover", "submit"];
     return !disallowedEvents.includes(event.type);
-
 }
+*/
 
 // ログを生成し，送信する関数(イベントハンドラー関数)
 function sendEventLog(event) {
