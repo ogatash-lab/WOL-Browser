@@ -113,9 +113,9 @@ function removeEventListenersFromElement(element) {
 const ignoredEvents = [
     // マウスイベント
     "mouseenter", "mouseover", "mouseout", "mouseleave", "dblclick",
-    "mousedown", "mouseup",
+    "mousedown", "mouseup", "mousemove",
     // ポインターイベント (タッチやペン入力にも対応)
-    "pointerenter", "pointerover", "pointerout", "pointerleave",
+    "pointerenter", "pointerover", "pointerout", "pointerleave", "pointerdown", "pointerup", "pointermove",
     // キーボードイベント
     "keyup", "keydown", "keypress",
     // フォーム関連イベント
@@ -647,7 +647,7 @@ function createDocumentJson(document) {
         //styleSheetSets: document.styleSheetSets,  // WOL-Serverで未実装
         //timeline: document.timeline,  // WOL-Serverで未実装
         //undoManager: document.undoManager,    //experimental&WOL-Serverで未実装
-        visibilityState: document.vifsibilityState,
+        visibilityState: document.visibilityState,
         //children: document.children, // WOL-Serverで未実装
         //firstElementChild: document.firstElementChild, // WOL-Serverで未実装
         //lastElementChild: document.lastElementChild, // WOL-Serverで未実装
@@ -900,7 +900,7 @@ function createHTMLFormElementJson(htmlFormElement) {
     return {
         //elements: htmlFormElement.elements,   // WOL-Serverに未実装
         length: htmlFormElement.length,
-        name: htmlFormElement.name,
+        //name: htmlFormElement.name,   // 直接シリアライズできない
         method: htmlFormElement.method,
         target: htmlFormElement.target,
         action: htmlFormElement.action,
@@ -1357,7 +1357,7 @@ function customStringify(json) {
             }
             cache.push(value);  // 処理中のオブジェクトをキャッシュに追加
         }
-        return value;   value;  // 値をそのまま返す（オブジェクトでない場合やループ参照でない場合）
+        return value;  // 値をそのまま返す（オブジェクトでない場合やループ参照でない場合）
     });
     cache = null; // キャッシュをクリアして、ガーベジコレクションを促す
     return jsonString;  // 最終的にシリアライズされたJSON文字列を返す
