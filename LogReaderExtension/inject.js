@@ -3,17 +3,15 @@
 // グローバルにイベント仕様を格納する変数
 let eventSpecs;
 
-// 外部リソース（eventSpecs）の読み込み
-const eventSpecRequest = new XMLHttpRequest();
-eventSpecRequest.open("get", "http://localhost:8080/OpLoRServerPrototype-1.0-SNAPSHOT/standard_event.json", true);
-eventSpecRequest.send(null);
-eventSpecRequest.onreadystatechange = () => {
-    // リクエストが完了し、ステータスが200（正常）でない場合は処理を中止
-    if (eventSpecRequest.readyState !== 4 || eventSpecRequest.status !== 200) {//正常に通信が終わらない
+// 外部リソース（eventSpecs）の読み込み（通信は拡張機能の裏方 bg.js に頼む）
+chrome.runtime.sendMessage({ type: "getEventSpecs" }, (res) => {
+    // 取得に失敗した場合は処理を中止
+    if (!res || !res.ok) {//正常に通信が終わらない
+        console.error("Failed to load standard_event.json", res && res.error);
         return;
     }
     // レスポンスをJSON形式に変換してeventSpecsに格納
-    eventSpecs = JSON.parse(eventSpecRequest.responseText);//JSON形式からオブジェクトに
+    eventSpecs = JSON.parse(res.text);//JSON形式からオブジェクトに
     
     // 取得したeventSpecsを元にイベントリスナーを登録
     for (const eventSpec of eventSpecs) {
@@ -25,7 +23,7 @@ eventSpecRequest.onreadystatechange = () => {
 
     // DOM 変化の監視を開始
     observeDOMChanges();
-};
+});
 
 // イベント仕様がターゲットに追加するべきかを判断する関数
 function isTarget(eventSpec) {
@@ -33,6 +31,7 @@ function isTarget(eventSpec) {
         && !eventSpec.experimental  // 実験的ではない
         && !eventSpec.type.deprecated   // イベントタイプが非推奨ではない
         && !eventSpec.type.experimental // イベントタイプが実験的ではない
+        && eventSpec.name !== 'unload'  // Chrome 154 以降は unload を使えない（登録すると [Violation] が出る）
 }
 
 // DOM要素に対して全てのイベント仕様に基づいてsendEventLogを実行するイベントリスナーを追加する関数
@@ -117,9 +116,9 @@ const ignoredEvents = [
     // ポインターイベント (タッチやペン入力にも対応)
     "pointerenter", "pointerover", "pointerout", "pointerleave", "pointerdown", "pointerup", "pointermove",
     // キーボードイベント
-    "keyup", "keydown", "keypress",
+    //"keyup", "keydown", "keypress",
     // フォーム関連イベント
-    "change", "focus", "blur",
+    //"change", "focus", "blur",
     // ページ関連イベント
     "load"
 ];
@@ -142,6 +141,8 @@ function sendEventLog(event) {
     let {EventType, json: EventLog} = parseEvent(event, eventDate);    // 戻り値jsonをEventLogとする
     let {NodeType, json: NodeLog} = parseElement(event.target); // 戻り値jsonをEventLogとする
     
+    //取得したイベントの型（EventType）とより詳細な種類（EventLog.type）を出力　デバッグ用
+    console.log(EventLog.type+" @ "+EventType)
 
     // イベント情報をJSONに追加
     json.push(EventLog);
@@ -159,52 +160,24 @@ function sendEventLog(event) {
     sendLog(oplorLog, EventType, NodeType);
 }
 
-// ログを送信する関数
+// ログを送信する関数（通信は拡張機能の裏方 bg.js に頼む）
 function sendLog(oplorLog, EventType, NodeType) {
     // oplorLogsにデータがある場合のみ処理を実行
     if (oplorLog && oplorLog.length > 0){
-        // 初期化を行う
-        operationLogRequest = init()
-        // 初期化処理が成功した場合
-		if(operationLogRequest) {
-            // ログをコンソールに表示（デバッグ用）
-			// console.log("Logs:"+oplorLog.toString());
-            // イベント情報と共にログデータを送信
-            operationLogRequest.send(EventType+"@@"+NodeType+"@@"+ oplorLog.toString());
-        }
-    }
-}
-
-// ログ送信用のXMLHttpRequestを初期化し，設定する関数
-// 初期化が成功した場合はtrueを返す
-function init(){
-    // XMLHttpRequestオブジェクトの生成
-    let operationLogRequest = new XMLHttpRequest();
-    
-    // HTTPリクエストの設定
-	operationLogRequest.open("post", "http://localhost:8080/OpLoRServerPrototype-1.0-SNAPSHOT/HW", true);//開発環境を経由しない場合
-    
-    // リクエストヘッダーの設定：JSONデータを送信する形式を指定
-    operationLogRequest.setRequestHeader("Content-Type", "application/json; charset=ASCII");
-    
-    // クロスオリジンリクエスト(CORSリクエスト)の際に認証情報を送信する設定
-    operationLogRequest.withCredentials=true;
-
-    // リクエストの状態変化に応じた処理
-    operationLogRequest.onreadystatechange = () => {
-        if (operationLogRequest.readyState === 4) { // リクエスト完了時
-            if (operationLogRequest.status === 200) {
+        // ログをコンソールに表示（デバッグ用）
+		// console.log("Logs:"+oplorLog.toString());
+        // イベント情報と共にログデータを bg.js に渡し，サーバへ送信してもらう
+        chrome.runtime.sendMessage({ type: "sendLog", body: EventType+"@@"+NodeType+"@@"+ oplorLog.toString() }, (res) => {
+            // 送信結果に応じた処理
+            if (res && res.status === 200) {
                 console.log("Log sent successfully.");
-            } else if (operationLogRequest.status === 429) {
+            } else if (res && res.status === 429) {
                 console.error("Too Many Requests. Please slow down.");
-                return; // `undefined`を返す(if()ではfalseとして扱われる)
             } else {
-                console.error(`Failed to send log. Status code: ${operationLogRequest.status}`);
-                return;
+                console.error(`Failed to send log. Status code: ${res ? res.status : "?"}`);
             }
-        }
+        });
     }
-    return operationLogRequest;
 }
 
 // イベントオブジェクトを解析して，対応するJSONを生成する関数
@@ -351,7 +324,7 @@ function createKeyboardEventJson(keyboardEvent) {
         location: keyboardEvent.location,
         metaKey: keyboardEvent.metaKey,
         repeat: keyboardEvent.repeat,
-        shiftkey: keyboardEvent.shiftKey
+        shiftKey: keyboardEvent.shiftKey
     }
 }
 function createWheelEventJson(event) {

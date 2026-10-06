@@ -45,10 +45,15 @@
 		"https://eduweb.sta.kanazawa-u.ac.jp/",
 		"https://basket.step.rakuten.co.jp/*",
 		"https://www.dnp.co.jp/*",
+        "http://localhost:8080/*",
         "http://127.0.0.1:3000/*",
         "http://127.0.0.1:5000/*",
 		"https://160.252.130.85:443/*"
     ],
+
+    "background": {
+        "service_worker": "bg.js"
+    },
 
     "action": {
         "default_title": "Send user activity logs",
